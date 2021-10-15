@@ -73,6 +73,7 @@ class Building:
             person_floor.remove(person)
         except ValueError:
             raise ValueError("Person not in {}".format(person))
+        
 
         person_x = person.position[1]
         person_y = person.position[2]
@@ -116,15 +117,15 @@ class Building:
         return new_sick_people
 
     def day(self):
-        # this is the for loop that repeats this everyday
-        for day in range(0, 16):
-            # spreads virus for every floor
-            for floor in range(1, self.floors + 1):
-                self.spread(floor)
-                floor_sick_people = self.find_sick_people(floor)
-                # print(floor_sick_people)
-                for person in floor_sick_people:
-                    person.day_pass()
+        new_sick_people = []
+        for floor_num, floor in enumerate(self.people):
+            for _ in range(1000):
+                for person in floor:
+                    person.simulate_movement() 
+                    sick_people = self.spread(floor_num)
+                    new_sick_people.append(sick_people)
+        return new_sick_people
+
 
 
 class Person:
@@ -151,15 +152,17 @@ class Person:
     def go_home(self):
         if self.sick and not self.asymptomatic:
             self.isolate = True
-            self.building.remove_person(self)
+        self.building.remove_person(self)
 
     def move_floor(self, up: bool):
+        current_building = self.building
         self.building.remove_person(self)
         if up:
             new_floor = self.position[0] + 1
         else:
             new_floor = self.position[0] - 1
         self.position = (new_floor, self.position[1], self.position[2])
+        self.building = current_building
         self.building.add_person(self)
 
     def day_pass(self):
