@@ -17,6 +17,5 @@ giant.add_person(person4)
 giant.add_person(person5)
 giant.add_person(person6)
 
-
-
+print(giant.spread(2))
 

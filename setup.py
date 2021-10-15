@@ -88,7 +88,7 @@ class Building:
     # this method simulates the spread itself not the movement of people
     def spread(self, floor_num: int):
         # if the spread score is above or equal 25 then they are sick and then enter the asymptomatic stage
-        sick_people = self.find_sick_people(floor_num - 1)
+        sick_people = self.find_sick_people(floor_num)
         new_sick_people = []
 
         sick_scores = {}
