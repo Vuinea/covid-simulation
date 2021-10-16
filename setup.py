@@ -2,19 +2,10 @@ import itertools
 import copy
 import random
 
-
-# List:
-# 1. need to simulate movement
-# 2. create website to visualize
-# 3. finished for the time being
-
-# every grid space is 2.5 feet
-
-
 class Building:
-    def __init__(self, name: str):
+    def __init__(self, name: str, floors:int):
         self.name = name
-        self.floors = 2
+        self.floors = floors
         self.people = []
         self.grid_distance = 2.5
         for _ in range(self.floors):
@@ -25,6 +16,7 @@ class Building:
 
     def get_floor(self, floor_num):
         return self.people[floor_num - 1]
+        
 
     def check_floor_sick(self, floor_num: int):
         floor = self.get_floor(floor_num)
@@ -57,7 +49,7 @@ class Building:
         person.building = self
 
     def remove_person(self, person):
-        floor_num = person.position[0]
+        floor_num = person.position[0] 
         floor = self.get_floor(floor_num)
         floor.remove(person)
         person.building = None
@@ -117,17 +109,13 @@ class Building:
         return new_sick_people
 
     def day(self):
-        new_sick_people = []
-        for floor_num, floor in enumerate(self.people):
-            for _ in range(1000):
-                for person in floor:
-                    person.simulate_movement() 
-                    sick_people = self.spread(floor_num)
-                    new_sick_people.append(sick_people)
-        return new_sick_people
-
-
-
+        # this is what happens in the day 
+        for _ in range(1000):
+            for floor_num, floor in enumerate(  self.people, start=1):
+                self.spread(floor_num)
+                for person in floor: 
+                    person.simulate_movement()
+                    self.spread(floor_num)
 class Person:
     base_id = itertools.count()
 
@@ -158,9 +146,13 @@ class Person:
         current_building = self.building
         self.building.remove_person(self)
         if up:
-            new_floor = self.position[0] + 1
+                new_floor = self.position[0] + 1 if self.position[0] < len(current_building.people) \
+                            else self.position[0]
         else:
-            new_floor = self.position[0] - 1
+            if self.position[0] <= 1:
+              new_floor = 1
+            else:
+              new_floor = self.position[0] - 1
         self.position = (new_floor, self.position[1], self.position[2])
         self.building = current_building
         self.building.add_person(self)
@@ -175,10 +167,12 @@ class Person:
     def simulate_movement(self):
         # this is the random number generator that determines wether they should go...
         # up or down a floor
-        floor = random.randint(1, 5)
-        if floor == 1:
+        floor = random.randrange(1, 11)
+        # this should be deleted after test done
+        current_floor = self.position[0]
+        if floor in range(1, 7) and self.position[0] >= 1:
             self.move_floor(False)
-        elif floor == 5:
+        elif floor == 10 and self.position[0] <= len(self.building.people):
             self.move_floor(True)
         else:
             x_position = random.randint(0, 10)
@@ -192,6 +186,4 @@ class Person:
 
     def __repr__(self):
         return self.name
-
-
 
