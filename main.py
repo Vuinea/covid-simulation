@@ -22,6 +22,6 @@ giant.add_person(person7)
 
 print(giant.people)
 giant.day()
-print(giant.people)
+print("\n", giant.people)
 
 

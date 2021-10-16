@@ -116,6 +116,12 @@ class Building:
                 for person in floor: 
                     person.simulate_movement()
                     self.spread(floor_num)
+    def days(self, num_of_days):
+        # repeats day function for a certain number of days 
+        for _ in range(num_of_days):
+            self.day()
+
+
 class Person:
     base_id = itertools.count()
 
