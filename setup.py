@@ -99,11 +99,11 @@ class Building:
                 spread_score += 3.8 - distance_x
                 spread_score += 3.8 - distance_y
                 sick_scores[possible_person] = spread_score
-
             # checking if the person should get sick
             for person in sick_scores.keys():
                 score = sick_scores[person]
-                if score >= 25:
+                if score >= 40:
+                    print(score)
                     person.get_sick()
                     new_sick_people.append(person.name)
         return new_sick_people
@@ -111,7 +111,7 @@ class Building:
     def day(self):
         # this is what happens in the day 
         for _ in range(1000):
-            for floor_num, floor in enumerate(  self.people, start=1):
+            for floor_num, floor in enumerate(self.people, start=1):
                 self.spread(floor_num)
                 for person in floor: 
                     person.simulate_movement()
