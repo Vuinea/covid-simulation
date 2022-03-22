@@ -103,9 +103,8 @@ class Building:
             for person in sick_scores.keys():
                 score = sick_scores[person]
                 if score >= 40:
-                    print(score)
                     person.get_sick()
-                    new_sick_people.append(person.name)
+                    new_sick_people.append(person)
         return new_sick_people
 
     def day(self):
@@ -116,10 +115,18 @@ class Building:
                 for person in floor: 
                     person.simulate_movement()
                     self.spread(floor_num)
+    
     def days(self, num_of_days):
         # repeats day function for a certain number of days 
         for _ in range(num_of_days):
             self.day()
+  
+  
+    def get_sick_people(self):
+        sick_people = {}
+        for floor_num in range(0, self.floors):
+            sick_people[floor_num+1] = self.find_sick_people(floor_num)
+        return sick_people
 
 
 class Person:
@@ -174,8 +181,6 @@ class Person:
         # this is the random number generator that determines wether they should go...
         # up or down a floor
         floor = random.randrange(1, 11)
-        # this should be deleted after test done
-        current_floor = self.position[0]
         if floor in range(1, 7) and self.position[0] >= 1:
             self.move_floor(False)
         elif floor == 10 and self.position[0] <= len(self.building.people):

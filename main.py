@@ -19,5 +19,8 @@ giant.add_person(person5)
 giant.add_person(person6)
 giant.add_person(person7)
 
+print(f"Original Sick People: {giant.get_sick_people()}")
+giant.days(3)
+print(f"New Sick People: {giant.get_sick_people()}")
 
 
